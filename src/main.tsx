@@ -1,7 +1,11 @@
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
 import App from './App.tsx';
+import { queryClient } from './api/configs/queryClientConfig';
+import { AuthProvider } from './api/contexts/AuthContext.tsx';
+import './index.css';
 
 // Register Service Worker
 if ('serviceWorker' in navigator) {
@@ -19,6 +23,11 @@ if ('serviceWorker' in navigator) {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <App />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </AuthProvider>
+    </QueryClientProvider>
   </StrictMode>
 );
