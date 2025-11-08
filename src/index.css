@@ -52,78 +52,107 @@ body {
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Spotify Light Theme */
+  --background: oklch(1 0 0); /* #ffffff */
+  --foreground: oklch(0.1 0 0); /* #121212 */
+  --card: oklch(1 0 0); /* #ffffff */
+  --card-foreground: oklch(0.1 0 0); /* #121212 */
+  --popover: oklch(1 0 0); /* #ffffff */
+  --popover-foreground: oklch(0.1 0 0); /* #121212 */
+  --primary: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
+  --primary-foreground: oklch(0.1 0 0); /* #121212 */
+  --secondary: oklch(0.96 0 0); /* Cinza claro */
+  --secondary-foreground: oklch(0.1 0 0); /* #121212 */
+  --muted: oklch(0.96 0 0); /* Cinza claro */
+  --muted-foreground: oklch(0.4 0 0); /* Cinza médio */
+  --accent: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
+  --accent-foreground: oklch(0.1 0 0); /* #121212 */
+  --destructive: oklch(0.6 0.25 27); /* Vermelho */
+  --border: oklch(0.9 0 0); /* Cinza borda */
+  --input: oklch(0.96 0 0); /* Cinza input */
+  --ring: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
+  --chart-1: oklch(0.75 0.19 141); /* Verde Spotify */
+  --chart-2: oklch(0.6 0.15 200); /* Azul */
+  --chart-3: oklch(0.5 0.15 320); /* Roxo */
+  --chart-4: oklch(0.7 0.2 50); /* Amarelo */
+  --chart-5: oklch(0.6 0.2 15); /* Laranja */
+  --sidebar: oklch(0.98 0 0); /* Cinza muito claro */
+  --sidebar-foreground: oklch(0.1 0 0); /* #121212 */
+  --sidebar-primary: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
+  --sidebar-primary-foreground: oklch(0.1 0 0); /* #121212 */
+  --sidebar-accent: oklch(0.96 0 0); /* Cinza claro */
+  --sidebar-accent-foreground: oklch(0.1 0 0); /* #121212 */
+  --sidebar-border: oklch(0.9 0 0); /* Cinza borda */
+  --sidebar-ring: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Spotify Dark Theme */
+  --background: oklch(0.1 0 0); /* #121212 - Preto Spotify */
+  --foreground: oklch(1 0 0); /* #ffffff */
+  --card: oklch(0.15 0 0); /* Cinza escuro */
+  --card-foreground: oklch(1 0 0); /* #ffffff */
+  --popover: oklch(0.15 0 0); /* Cinza escuro */
+  --popover-foreground: oklch(1 0 0); /* #ffffff */
+  --primary: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
+  --primary-foreground: oklch(0.1 0 0); /* #121212 */
+  --secondary: oklch(0.2 0 0); /* Cinza escuro secundário */
+  --secondary-foreground: oklch(1 0 0); /* #ffffff */
+  --muted: oklch(0.2 0 0); /* Cinza escuro */
+  --muted-foreground: oklch(0.7 0 0); /* Cinza claro */
+  --accent: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
+  --accent-foreground: oklch(0.1 0 0); /* #121212 */
+  --destructive: oklch(0.65 0.25 27); /* Vermelho */
+  --border: oklch(0.25 0 0); /* Cinza borda escuro */
+  --input: oklch(0.2 0 0); /* Cinza input escuro */
+  --ring: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
+  --chart-1: oklch(0.75 0.19 141); /* Verde Spotify */
+  --chart-2: oklch(0.7 0.15 200); /* Azul claro */
+  --chart-3: oklch(0.65 0.15 320); /* Roxo claro */
+  --chart-4: oklch(0.75 0.2 50); /* Amarelo claro */
+  --chart-5: oklch(0.7 0.2 15); /* Laranja claro */
+  --sidebar: oklch(0.1 0 0); /* #121212 - Preto Spotify */
+  --sidebar-foreground: oklch(1 0 0); /* #ffffff */
+  --sidebar-primary: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
+  --sidebar-primary-foreground: oklch(0.1 0 0); /* #121212 */
+  --sidebar-accent: oklch(0.2 0 0); /* Cinza escuro */
+  --sidebar-accent-foreground: oklch(1 0 0); /* #ffffff */
+  --sidebar-border: oklch(0.25 0 0); /* Cinza borda escuro */
+  --sidebar-ring: oklch(0.75 0.19 141); /* #1ed760 - Verde Spotify */
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
+  html,
   body {
     @apply bg-background text-foreground;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    @apply bg-background;
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .spotify-green {
+    background-color: #1ed760;
+    color: #121212;
+  }
+
+  .spotify-black {
+    background-color: #121212;
+    color: #ffffff;
+  }
+
+  .spotify-white {
+    background-color: #ffffff;
+    color: #121212;
   }
 }

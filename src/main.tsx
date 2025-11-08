@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import { queryClient } from './api/configs/queryClientConfig';
 import { AuthProvider } from './api/contexts/AuthContext.tsx';
+import { ThemeProvider } from './components/theme-provider';
 import './index.css';
 import { registerServiceWorker } from './utils/serviceWorker';
 
@@ -17,12 +18,14 @@ if (typeof window !== 'undefined') {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <App />
+    <ThemeProvider defaultTheme="system" storageKey="spotify-challenge-theme">
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <App />
 
-        <ReactQueryDevtools initialIsOpen={false} />
-      </AuthProvider>
-    </QueryClientProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </AuthProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   </StrictMode>
 );
