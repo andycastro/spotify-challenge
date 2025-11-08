@@ -16,7 +16,6 @@ yarn.lock
 pnpm-lock.yaml
 
 # IDE files
-.vscode/
 .idea/
 
 # OS files
