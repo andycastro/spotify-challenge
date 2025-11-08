@@ -6,18 +6,12 @@ import App from './App.tsx';
 import { queryClient } from './api/configs/queryClientConfig';
 import { AuthProvider } from './api/contexts/AuthContext.tsx';
 import './index.css';
+import { registerServiceWorker } from './utils/serviceWorker';
 
-// Register Service Worker
-if ('serviceWorker' in navigator) {
+// Registrar Service Worker quando a página carregar
+if (typeof window !== 'undefined') {
   window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/sw.js')
-      .then(registration => {
-        console.log('SW registered: ', registration);
-      })
-      .catch(registrationError => {
-        console.log('SW registration failed: ', registrationError);
-      });
+    registerServiceWorker();
   });
 }
 
@@ -26,6 +20,7 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <App />
+
         <ReactQueryDevtools initialIsOpen={false} />
       </AuthProvider>
     </QueryClientProvider>
