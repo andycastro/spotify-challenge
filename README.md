@@ -19,6 +19,7 @@ Este projeto tem por objetivo utilizar a API pública do Spotify para listar art
 ### 🌟 Diferenciais (Plus)
 
 Será considerado plus se:
+
 - A criatividade for explorada
 - Adicionar novas imagens ou animações entre outros artifícios para dar sua assinatura à aplicação
 - Validações de campos e mensagens de erros com feedback visual
@@ -28,6 +29,7 @@ Será considerado plus se:
 ## 🛠️ Requisitos Técnicos Obrigatórios
 
 ### Core Technologies
+
 - **React** - Biblioteca principal para UI
 - **TypeScript** - Tipagem estática
 - **Context API** - Gerenciamento de estado utilizando useReducer
@@ -39,6 +41,7 @@ Será considerado plus se:
 - **i18n** - Internacionalização
 
 ### 🔧 Diferenciais Técnicos
+
 - Testes unitários e end-to-end
 - ESLint e Prettier para padronização de código
 - Validações usando Zod
@@ -46,6 +49,7 @@ Será considerado plus se:
 ## 🚀 Como Executar
 
 ### Pré-requisitos
+
 - Node.js (versão 18 ou superior)
 - npm ou yarn
 - Chave da API do Spotify
@@ -53,12 +57,14 @@ Será considerado plus se:
 ### Instalação
 
 1. Clone o repositório:
+
 ```bash
 git clone https://github.com/andycastro/spotify-challenge.git
 cd spotify-challenge
 ```
 
 2. Instale as dependências:
+
 ```bash
 npm install
 # ou
@@ -66,17 +72,20 @@ yarn install
 ```
 
 3. Configure as variáveis de ambiente:
+
 ```bash
 cp .env.example .env
 ```
 
 4. Adicione sua chave da API do Spotify no arquivo `.env`:
+
 ```
 REACT_APP_SPOTIFY_CLIENT_ID=seu_client_id_aqui
 REACT_APP_SPOTIFY_CLIENT_SECRET=seu_client_secret_aqui
 ```
 
 5. Execute o projeto:
+
 ```bash
 npm start
 # ou
@@ -88,6 +97,7 @@ O projeto estará disponível em `http://localhost:3000`
 ### Testes
 
 Para executar os testes:
+
 ```bash
 # Testes unitários
 npm test
@@ -126,6 +136,7 @@ src/
 ## 🌐 API do Spotify
 
 Este projeto utiliza a [Spotify Web API](https://developer.spotify.com/documentation/web-api/) para:
+
 - Buscar artistas
 - Obter detalhes de artistas
 - Listar álbuns e tracks
