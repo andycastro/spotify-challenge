@@ -1,14 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  useAuth,
-  useSpotifySearchArtistByName,
-  useSpotifySearchArtistsDefault,
-} from '../api';
+import { useAuth, useSpotifySearchArtistsDefault } from '../api';
+import { useSpotifySearchArtists } from '../api/queries/useSpotifyQueries';
+import type { SpotifyArtist } from '../api/types/spotifyTypes';
 import {
   ArtistCard,
   ArtistCardSkeleton,
   SpotifySetupInstructions,
 } from '../components';
+import { GeneratedPagination } from '../components/ui/pagination';
 
 interface HomeProps {
   searchTerm: string;
@@ -50,17 +49,60 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
     [isAuthenticated, debouncedSearchTerm]
   );
 
+  const [defaultOffset, setDefaultOffset] = useState(0);
+  const DEFAULT_LIMIT = 20;
   const {
     data: defaultData,
     isLoading: isLoadingDefault,
+    isFetching: isFetchingDefault,
     error: defaultError,
-  } = useSpotifySearchArtistsDefault('a', 20, 20, isAuthenticated);
+  } = useSpotifySearchArtistsDefault(
+    'a',
+    DEFAULT_LIMIT,
+    defaultOffset,
+    isAuthenticated
+  );
+  const [initialDefaultTotal, setInitialDefaultTotal] = useState<number | null>(
+    null
+  );
+  useEffect(() => {
+    if (defaultData && initialDefaultTotal == null) {
+      setInitialDefaultTotal(defaultData.artists.total);
+    }
+  }, [defaultData, initialDefaultTotal]);
 
+  const [searchOffset, setSearchOffset] = useState(0);
+  const SEARCH_LIMIT = 10;
+  useEffect(() => {
+    setSearchOffset(0);
+  }, [debouncedSearchTerm]);
   const {
     data: searchData,
     isLoading: isLoadingSearch,
+    isFetching: isFetchingSearch,
     error: searchError,
-  } = useSpotifySearchArtistByName(debouncedSearchTerm, 10, isSearchEnabled);
+  } = useSpotifySearchArtists(
+    {
+      q: debouncedSearchTerm,
+      type: 'artist',
+      limit: SEARCH_LIMIT,
+      offset: searchOffset,
+    },
+    isSearchEnabled
+  );
+  const [initialSearchTotal, setInitialSearchTotal] = useState<number | null>(
+    null
+  );
+  useEffect(() => {
+    if (searchData && initialSearchTotal == null) {
+      setInitialSearchTotal(searchData.artists.total);
+    }
+  }, [searchData, initialSearchTotal]);
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      setInitialSearchTotal(null);
+    }
+  }, [debouncedSearchTerm]);
 
   if (authLoading) {
     return (
@@ -132,11 +174,38 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             <p className="text-red-500">Erro: {defaultError.message}</p>
           )}
           {defaultData && !isLoadingDefault && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {defaultData.artists.items.map(artist => (
-                <ArtistCard key={artist.id} artist={artist} />
-              ))}
-            </div>
+            <>
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+                aria-live="polite"
+              >
+                {isFetchingDefault
+                  ? Array.from({ length: Math.min(DEFAULT_LIMIT, 6) }).map(
+                      (_, i) => (
+                        <ArtistCardSkeleton key={`default-skeleton-${i}`} />
+                      )
+                    )
+                  : defaultData.artists.items.map((artist: SpotifyArtist) => (
+                      <ArtistCard key={artist.id} artist={artist} />
+                    ))}
+              </div>
+              <GeneratedPagination
+                page={
+                  Math.floor(
+                    defaultData.artists.offset / defaultData.artists.limit
+                  ) + 1
+                }
+                totalPages={Math.ceil(
+                  (initialDefaultTotal ?? defaultData.artists.total) /
+                    defaultData.artists.limit
+                )}
+                hasNext={Boolean(defaultData.artists.next)}
+                isFetching={isFetchingDefault}
+                onChange={p =>
+                  setDefaultOffset((p - 1) * defaultData.artists.limit)
+                }
+              />
+            </>
           )}
         </div>
       )}
@@ -182,11 +251,38 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             </p>
           )}
           {searchData && searchData.artists.items.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {searchData.artists.items.map(artist => (
-                <ArtistCard key={artist.id} artist={artist} />
-              ))}
-            </div>
+            <>
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+                aria-live="polite"
+              >
+                {isFetchingSearch
+                  ? Array.from({ length: Math.min(SEARCH_LIMIT, 6) }).map(
+                      (_, i) => (
+                        <ArtistCardSkeleton key={`search-skeleton-${i}`} />
+                      )
+                    )
+                  : searchData.artists.items.map((artist: SpotifyArtist) => (
+                      <ArtistCard key={artist.id} artist={artist} />
+                    ))}
+              </div>
+              <GeneratedPagination
+                page={
+                  Math.floor(
+                    searchData.artists.offset / searchData.artists.limit
+                  ) + 1
+                }
+                totalPages={Math.ceil(
+                  (initialSearchTotal ?? searchData.artists.total) /
+                    searchData.artists.limit
+                )}
+                hasNext={Boolean(searchData.artists.next)}
+                isFetching={isFetchingSearch}
+                onChange={p =>
+                  setSearchOffset((p - 1) * searchData.artists.limit)
+                }
+              />
+            </>
           )}
         </div>
       )}
