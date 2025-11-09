@@ -1,7 +1,7 @@
 import { SearchIcon } from 'lucide-react';
 import fullLogoGreen from '../assets/Full_Logo_Green_RGB.svg';
 import fullLogoWhite from '../assets/Full_Logo_White_RGB.svg';
-import { ModeToggle } from '../components/mode-toggle';
+import { ModeToggle } from '../components';
 import { Input } from '../components/ui/input';
 import { useTheme } from '../hooks/use-theme';
 

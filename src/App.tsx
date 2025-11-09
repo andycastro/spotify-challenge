@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
-import { Header } from './components/Header';
-import { Home } from './pages/Home';
+import { Header } from './components';
+import { Home } from './pages';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');

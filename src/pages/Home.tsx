@@ -4,9 +4,11 @@ import {
   useSpotifySearchArtistByName,
   useSpotifySearchArtistsDefault,
 } from '../api';
-import { ArtistCard } from '../components/ArtistCard';
-import { ArtistCardSkeleton } from '../components/ArtistCardSkeleton';
-import { SpotifySetupInstructions } from '../components/SpotifySetupInstructions';
+import {
+  ArtistCard,
+  ArtistCardSkeleton,
+  SpotifySetupInstructions,
+} from '../components';
 
 interface HomeProps {
   searchTerm: string;
