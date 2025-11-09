@@ -1,14 +1,8 @@
+import { SearchIcon } from 'lucide-react';
 import fullLogoGreen from '../assets/Full_Logo_Green_RGB.svg';
 import fullLogoWhite from '../assets/Full_Logo_White_RGB.svg';
 import { ModeToggle } from '../components/mode-toggle';
-import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from '../components/ui/navigation-menu';
-import { Separator } from '../components/ui/separator';
 import { useTheme } from '../hooks/use-theme';
 
 interface HeaderProps {
@@ -31,58 +25,32 @@ export const Header = ({ searchTerm, onSearchChange }: HeaderProps) => {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex h-16 items-center">
-        <div className="mr-4 hidden md:flex">
-          <a className="mr-6 flex items-center space-x-2" href="/">
-            <img src={getSpotifyLogo()} className="h-8" alt="Spotify" />
-            <span className="hidden font-bold sm:inline-block">
-              Spotify Challenge
-            </span>
-          </a>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center gap-4">
+        {/* Logo */}
+        <a className="flex items-center space-x-2" href="/">
+          <img src={getSpotifyLogo()} className="h-8" alt="Spotify" />
+          <span className="hidden md:inline-block font-bold">
+            Spotify Challenge
+          </span>
+        </a>
 
-        <div className="mr-4 flex md:hidden">
-          <img src={getSpotifyLogo()} className="h-7" alt="Spotify" />
-        </div>
-
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <Button variant="ghost" size="sm">
-                🏠 Home
-              </Button>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Button variant="ghost" size="sm">
-                🔍 Search
-              </Button>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="w-full flex-1 md:w-auto md:flex-none">
-            <div className="flex md:max-w-sm lg:max-w-md">
+        <div className="flex-1 flex justify-center">
+          <div className="w-full max-w-2xl">
+            <div className="relative group">
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 group-focus-within:text-neutral-200 transition-colors" />
               <Input
                 type="search"
                 placeholder="Buscar artistas..."
-                className="h-9 w-full"
+                className="pl-9 h-10 w-full rounded-md bg-[#121212] text-sm border border-neutral-700 focus-visible:ring-1 focus-visible:ring-green-500 placeholder:text-neutral-500"
                 value={searchTerm}
                 onChange={e => onSearchChange(e.target.value)}
               />
             </div>
           </div>
+        </div>
 
-          <nav className="flex items-center space-x-1">
-            <Button variant="ghost" size="sm" className="hidden sm:flex">
-              📚 Docs
-            </Button>
-            <Separator orientation="vertical" className="h-4" />
-            <ModeToggle />
-            <Button variant="default" size="sm">
-              🎵 Connect
-            </Button>
-          </nav>
+        <div className="flex items-center gap-2">
+          <ModeToggle />
         </div>
       </div>
     </header>
