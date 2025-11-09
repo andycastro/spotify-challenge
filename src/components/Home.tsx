@@ -4,7 +4,12 @@ import {
   useSpotifySearchArtistByName,
   useSpotifySearchArtistsDefault,
 } from '../api';
+import { ArtistCard } from './ArtistCard';
 import { SpotifySetupInstructions } from './SpotifySetupInstructions';
+
+interface HomeProps {
+  searchTerm: string;
+}
 
 const useDebounce = (value: string, delay: number): string => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -21,10 +26,6 @@ const useDebounce = (value: string, delay: number): string => {
 
   return debouncedValue;
 };
-
-interface HomeProps {
-  searchTerm: string;
-}
 
 export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
   const {
@@ -118,27 +119,9 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             <p className="text-red-500">Erro: {defaultError.message}</p>
           )}
           {defaultData && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {defaultData.artists.items.map(artist => (
-                <div
-                  key={artist.id}
-                  className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  {artist.images[0] && (
-                    <img
-                      src={artist.images[0].url}
-                      alt={artist.name}
-                      className="w-full h-40 object-cover rounded mb-2"
-                    />
-                  )}
-                  <h4 className="font-semibold">{artist.name}</h4>
-                  <p className="text-sm text-gray-600">
-                    Popularidade: {artist.popularity}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Seguidores: {artist.followers.total.toLocaleString()}
-                  </p>
-                </div>
+                <ArtistCard key={artist.id} artist={artist} />
               ))}
             </div>
           )}
@@ -176,40 +159,9 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             </p>
           )}
           {searchData && searchData.artists.items.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {searchData.artists.items.map(artist => (
-                <div
-                  key={artist.id}
-                  className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  {artist.images[0] && (
-                    <img
-                      src={artist.images[0].url}
-                      alt={artist.name}
-                      className="w-full h-40 object-cover rounded mb-2"
-                    />
-                  )}
-                  <h4 className="font-semibold">{artist.name}</h4>
-                  <p className="text-sm text-gray-600">
-                    Popularidade: {artist.popularity}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Seguidores: {artist.followers.total.toLocaleString()}
-                  </p>
-                  <div className="mt-2">
-                    <p className="text-xs text-gray-500">Gêneros:</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {artist.genres.slice(0, 3).map((genre, index) => (
-                        <span
-                          key={index}
-                          className="text-xs bg-gray-200 px-2 py-1 rounded"
-                        >
-                          {genre}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <ArtistCard key={artist.id} artist={artist} />
               ))}
             </div>
           )}
