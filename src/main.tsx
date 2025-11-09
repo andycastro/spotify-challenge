@@ -5,8 +5,8 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import { queryClient } from './api/configs/queryClientConfig';
 import { AuthProvider } from './api/contexts/AuthContext.tsx';
-import { ThemeProvider } from './components/theme-provider';
 import './index.css';
+import { ThemeProvider } from './lib';
 import { registerServiceWorker } from './utils/serviceWorker';
 
 // Registrar Service Worker quando a página carregar

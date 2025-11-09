@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Theme, ThemeProviderContext } from '../lib/theme-context';
+import { Theme, ThemeProviderContext } from './theme-context';
 
-type ThemeProviderProps = {
+export type ThemeProviderProps = {
   children: React.ReactNode;
   defaultTheme?: Theme;
   storageKey?: string;
@@ -19,7 +19,6 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = window.document.documentElement;
-
     root.classList.remove('light', 'dark');
 
     if (theme === 'system') {
@@ -27,7 +26,6 @@ export function ThemeProvider({
         .matches
         ? 'dark'
         : 'light';
-
       root.classList.add(systemTheme);
       return;
     }
@@ -37,9 +35,9 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    setTheme: (next: Theme) => {
+      localStorage.setItem(storageKey, next);
+      setTheme(next);
     },
   };
 
