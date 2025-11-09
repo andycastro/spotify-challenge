@@ -5,6 +5,7 @@ import {
   useSpotifySearchArtistsDefault,
 } from '../api';
 import { ArtistCard } from './ArtistCard';
+import { ArtistCardSkeleton } from './ArtistCardSkeleton';
 import { SpotifySetupInstructions } from './SpotifySetupInstructions';
 
 interface HomeProps {
@@ -114,11 +115,21 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             Confira alguns artistas populares ou use o campo de busca no
             cabeçalho para encontrar seus favoritos
           </p>
-          {isLoadingDefault && <p>Carregando artistas...</p>}
-          {defaultError && (
+          {isLoadingDefault && (
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+              aria-busy="true"
+              aria-label="Carregando artistas em destaque"
+            >
+              {Array.from({ length: 6 }).map((_, i) => (
+                <ArtistCardSkeleton key={i} />
+              ))}
+            </div>
+          )}
+          {defaultError && !isLoadingDefault && (
             <p className="text-red-500">Erro: {defaultError.message}</p>
           )}
-          {defaultData && (
+          {defaultData && !isLoadingDefault && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {defaultData.artists.items.map(artist => (
                 <ArtistCard key={artist.id} artist={artist} />
@@ -149,7 +160,17 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             )}
           {(isLoadingSearch ||
             (trimmedSearchTerm.length >= 2 &&
-              debouncedSearchTerm !== trimmedSearchTerm)) && <p>Buscando...</p>}
+              debouncedSearchTerm !== trimmedSearchTerm)) && (
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+              aria-busy="true"
+              aria-label="Buscando artistas"
+            >
+              {Array.from({ length: 6 }).map((_, i) => (
+                <ArtistCardSkeleton key={i} />
+              ))}
+            </div>
+          )}
           {searchError && (
             <p className="text-red-500">Erro: {searchError.message}</p>
           )}
