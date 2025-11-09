@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   useAuth,
   useSpotifySearchArtistByName,
@@ -6,14 +6,20 @@ import {
 } from '../api';
 import { SpotifySetupInstructions } from './SpotifySetupInstructions';
 
-export const Home: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+interface HomeProps {
+  searchTerm: string;
+}
+
+export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
   const {
     isAuthenticated,
     isLoading: authLoading,
     tokenInfo,
     refreshToken,
   } = useAuth();
+
+  // Trim search term to avoid accidental spaces
+  const trimmedSearchTerm = searchTerm.trim();
 
   const {
     data: defaultData,
@@ -26,9 +32,9 @@ export const Home: React.FC = () => {
     isLoading: isLoadingSearch,
     error: searchError,
   } = useSpotifySearchArtistByName(
-    searchTerm,
+    trimmedSearchTerm,
     10,
-    isAuthenticated && !!searchTerm
+    isAuthenticated && !!trimmedSearchTerm && trimmedSearchTerm.length >= 2
   );
 
   if (authLoading) {
@@ -79,93 +85,112 @@ export const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">
-          Busca padrão (q=a, limit=20, offset=20)
-        </h3>
-        {isLoadingDefault && <p>Carregando artistas...</p>}
-        {defaultError && (
-          <p className="text-red-500">Erro: {defaultError.message}</p>
-        )}
-        {defaultData && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {defaultData.artists.items.map(artist => (
-              <div
-                key={artist.id}
-                className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
-              >
-                {artist.images[0] && (
-                  <img
-                    src={artist.images[0].url}
-                    alt={artist.name}
-                    className="w-full h-40 object-cover rounded mb-2"
-                  />
-                )}
-                <h4 className="font-semibold">{artist.name}</h4>
-                <p className="text-sm text-gray-600">
-                  Popularidade: {artist.popularity}
-                </p>
-                <p className="text-xs text-gray-500">
-                  Seguidores: {artist.followers.total.toLocaleString()}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {!trimmedSearchTerm && (
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-2">Artistas em destaque</h3>
+          <p className="text-gray-600 mb-4">
+            Confira alguns artistas populares ou use o campo de busca no
+            cabeçalho para encontrar seus favoritos
+          </p>
+          {isLoadingDefault && <p>Carregando artistas...</p>}
+          {defaultError && (
+            <p className="text-red-500">Erro: {defaultError.message}</p>
+          )}
+          {defaultData && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {defaultData.artists.items.map(artist => (
+                <div
+                  key={artist.id}
+                  className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  {artist.images[0] && (
+                    <img
+                      src={artist.images[0].url}
+                      alt={artist.name}
+                      className="w-full h-40 object-cover rounded mb-2"
+                    />
+                  )}
+                  <h4 className="font-semibold">{artist.name}</h4>
+                  <p className="text-sm text-gray-600">
+                    Popularidade: {artist.popularity}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Seguidores: {artist.followers.total.toLocaleString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Busca personalizada</h3>
-        <input
-          type="text"
-          placeholder="Digite o nome do artista..."
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
-        />
-        {isLoadingSearch && searchTerm && <p>Buscando...</p>}
-        {searchError && (
-          <p className="text-red-500">Erro: {searchError.message}</p>
-        )}
-        {searchData && searchTerm && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {searchData.artists.items.map(artist => (
-              <div
-                key={artist.id}
-                className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
-              >
-                {artist.images[0] && (
-                  <img
-                    src={artist.images[0].url}
-                    alt={artist.name}
-                    className="w-full h-40 object-cover rounded mb-2"
-                  />
-                )}
-                <h4 className="font-semibold">{artist.name}</h4>
-                <p className="text-sm text-gray-600">
-                  Popularidade: {artist.popularity}
-                </p>
-                <p className="text-xs text-gray-500">
-                  Seguidores: {artist.followers.total.toLocaleString()}
-                </p>
-                <div className="mt-2">
-                  <p className="text-xs text-gray-500">Gêneros:</p>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {artist.genres.slice(0, 3).map((genre, index) => (
-                      <span
-                        key={index}
-                        className="text-xs bg-gray-200 px-2 py-1 rounded"
-                      >
-                        {genre}
-                      </span>
-                    ))}
+      {trimmedSearchTerm && (
+        <div>
+          <h3 className="text-lg font-semibold mb-2">
+            Resultados para "{trimmedSearchTerm}"
+          </h3>
+          {trimmedSearchTerm.length < 2 && (
+            <p className="text-orange-600 mb-4">
+              Digite pelo menos 2 caracteres para buscar
+            </p>
+          )}
+          {trimmedSearchTerm.length >= 2 &&
+            !isLoadingSearch &&
+            !searchData &&
+            !searchError && (
+              <p className="text-orange-600 mb-4">
+                Busca não executada. Verifique autenticação.
+              </p>
+            )}
+          {isLoadingSearch && <p>Buscando...</p>}
+          {searchError && (
+            <p className="text-red-500">Erro: {searchError.message}</p>
+          )}
+          {searchData && searchData.artists.items.length === 0 && (
+            <p className="text-yellow-600 mb-4">
+              Nenhum resultado encontrado para "{trimmedSearchTerm}"
+            </p>
+          )}
+          {searchData && searchData.artists.items.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {searchData.artists.items.map(artist => (
+                <div
+                  key={artist.id}
+                  className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  {artist.images[0] && (
+                    <img
+                      src={artist.images[0].url}
+                      alt={artist.name}
+                      className="w-full h-40 object-cover rounded mb-2"
+                    />
+                  )}
+                  <h4 className="font-semibold">{artist.name}</h4>
+                  <p className="text-sm text-gray-600">
+                    Popularidade: {artist.popularity}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Seguidores: {artist.followers.total.toLocaleString()}
+                  </p>
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500">Gêneros:</p>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {artist.genres.slice(0, 3).map((genre, index) => (
+                        <span
+                          key={index}
+                          className="text-xs bg-gray-200 px-2 py-1 rounded"
+                        >
+                          {genre}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

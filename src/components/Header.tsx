@@ -2,6 +2,7 @@ import fullLogoGreen from '../assets/Full_Logo_Green_RGB.svg';
 import fullLogoWhite from '../assets/Full_Logo_White_RGB.svg';
 import { ModeToggle } from '../components/mode-toggle';
 import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -10,7 +11,12 @@ import {
 import { Separator } from '../components/ui/separator';
 import { useTheme } from '../hooks/use-theme';
 
-export const Header = () => {
+interface HeaderProps {
+  searchTerm: string;
+  onSearchChange: (term: string) => void;
+}
+
+export const Header = ({ searchTerm, onSearchChange }: HeaderProps) => {
   const { theme } = useTheme();
 
   const getSpotifyLogo = () => {
@@ -55,7 +61,17 @@ export const Header = () => {
         </NavigationMenu>
 
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="w-full flex-1 md:w-auto md:flex-none"></div>
+          <div className="w-full flex-1 md:w-auto md:flex-none">
+            <div className="flex md:max-w-sm lg:max-w-md">
+              <Input
+                type="search"
+                placeholder="Buscar artistas..."
+                className="h-9 w-full"
+                value={searchTerm}
+                onChange={e => onSearchChange(e.target.value)}
+              />
+            </div>
+          </div>
 
           <nav className="flex items-center space-x-1">
             <Button variant="ghost" size="sm" className="hidden sm:flex">
