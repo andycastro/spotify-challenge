@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   useAuth,
   useSpotifySearchArtistByName,
   useSpotifySearchArtistsDefault,
 } from '../api';
 import { SpotifySetupInstructions } from './SpotifySetupInstructions';
+
+const useDebounce = (value: string, delay: number): string => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 interface HomeProps {
   searchTerm: string;
@@ -18,8 +34,17 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
     refreshToken,
   } = useAuth();
 
-  // Trim search term to avoid accidental spaces
-  const trimmedSearchTerm = searchTerm.trim();
+  const trimmedSearchTerm = useMemo(() => searchTerm.trim(), [searchTerm]);
+
+  const debouncedSearchTerm = useDebounce(trimmedSearchTerm, 400);
+
+  const isSearchEnabled = useMemo(
+    () =>
+      isAuthenticated &&
+      !!debouncedSearchTerm &&
+      debouncedSearchTerm.length >= 2,
+    [isAuthenticated, debouncedSearchTerm]
+  );
 
   const {
     data: defaultData,
@@ -31,11 +56,7 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
     data: searchData,
     isLoading: isLoadingSearch,
     error: searchError,
-  } = useSpotifySearchArtistByName(
-    trimmedSearchTerm,
-    10,
-    isAuthenticated && !!trimmedSearchTerm && trimmedSearchTerm.length >= 2
-  );
+  } = useSpotifySearchArtistByName(debouncedSearchTerm, 10, isSearchEnabled);
 
   if (authLoading) {
     return (
@@ -134,15 +155,18 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
               Digite pelo menos 2 caracteres para buscar
             </p>
           )}
-          {trimmedSearchTerm.length >= 2 &&
+          {isSearchEnabled &&
             !isLoadingSearch &&
             !searchData &&
-            !searchError && (
+            !searchError &&
+            debouncedSearchTerm === trimmedSearchTerm && (
               <p className="text-orange-600 mb-4">
                 Busca não executada. Verifique autenticação.
               </p>
             )}
-          {isLoadingSearch && <p>Buscando...</p>}
+          {(isLoadingSearch ||
+            (trimmedSearchTerm.length >= 2 &&
+              debouncedSearchTerm !== trimmedSearchTerm)) && <p>Buscando...</p>}
           {searchError && (
             <p className="text-red-500">Erro: {searchError.message}</p>
           )}
