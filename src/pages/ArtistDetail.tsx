@@ -4,7 +4,11 @@ import {
   useSpotifyArtistAlbums,
   useSpotifyArtistById,
 } from '../api/queries/useSpotifyQueries';
-import { ArtistDetailSkeleton, ErrorState } from '../components';
+import {
+  ArtistAlbumsTable,
+  ArtistDetailSkeleton,
+  ErrorState,
+} from '../components';
 import { formatFollowers } from '../utils';
 
 export const ArtistDetail: React.FC = () => {
@@ -50,11 +54,11 @@ export const ArtistDetail: React.FC = () => {
   const totalAlbumPages = albumsData
     ? Math.ceil(albumsData.total / albumsData.limit)
     : 1;
-  const canPrevAlbums = albumsData ? albumsData.offset > 0 : false;
-  const canNextAlbums = albumsData
-    ? albumsData.next !== null &&
-      albumsData.offset + albumsData.limit < albumsData.total
-    : false;
+  const canPrevAlbums = !!albumsData && albumsData.offset > 0;
+  const canNextAlbums =
+    !!albumsData &&
+    albumsData.next !== null &&
+    albumsData.offset + albumsData.limit < albumsData.total;
 
   return (
     <div className="space-y-6">
@@ -181,146 +185,20 @@ export const ArtistDetail: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-[#121212] rounded-lg border border-[#1ed7601a] shadow-[0_0_0_1px_#1ed76010] p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Álbuns</h2>
-          <div className="flex gap-2 items-center">
-            <button
-              disabled={!canPrevAlbums || albumsLoading || albumsFetching}
-              onClick={() =>
-                setAlbumsOffset(Math.max(albumsOffset - DEFAULT_LIMIT, 0))
-              }
-              className="px-3 py-1 text-xs rounded bg-neutral-800 disabled:opacity-40 hover:bg-neutral-700 transition"
-            >
-              Anterior
-            </button>
-            <button
-              disabled={!canNextAlbums || albumsLoading || albumsFetching}
-              onClick={() => setAlbumsOffset(albumsOffset + DEFAULT_LIMIT)}
-              className="px-3 py-1 text-xs rounded bg-neutral-800 disabled:opacity-40 hover:bg-neutral-700 transition"
-            >
-              Próximo
-            </button>
-            <span className="text-xs text-neutral-400">
-              Página {currentAlbumPage} / {totalAlbumPages}
-            </span>
-          </div>
-        </div>
-        {albumsError && (
-          <ErrorState
-            message={albumsError.message}
-            title="Erro ao carregar álbuns"
-          />
-        )}
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left bg-neutral-900">
-                <th className="py-2 px-3 font-medium text-neutral-300">#</th>
-                <th className="py-2 px-3 font-medium text-neutral-300">Capa</th>
-                <th className="py-2 px-3 font-medium text-neutral-300">Nome</th>
-                <th className="py-2 px-3 font-medium text-neutral-300">Tipo</th>
-                <th className="py-2 px-3 font-medium text-neutral-300">
-                  Lançamento
-                </th>
-                <th className="py-2 px-3 font-medium text-neutral-300">
-                  Faixas
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {albumsLoading &&
-                Array.from({ length: 6 }).map((_, i) => (
-                  <tr
-                    key={`album-skel-${i}`}
-                    className={
-                      i % 2 === 0 ? 'bg-neutral-900/40' : 'bg-neutral-800/40'
-                    }
-                  >
-                    <td className="py-3 px-3">
-                      <div className="h-4 w-6 bg-neutral-800 rounded animate-pulse" />
-                    </td>
-                    <td className="py-3 px-3">
-                      <div className="h-12 w-12 bg-neutral-800 rounded animate-pulse" />
-                    </td>
-                    <td className="py-3 px-3">
-                      <div className="h-4 w-40 bg-neutral-800 rounded animate-pulse" />
-                    </td>
-                    <td className="py-3 px-3">
-                      <div className="h-4 w-20 bg-neutral-800 rounded animate-pulse" />
-                    </td>
-                    <td className="py-3 px-3">
-                      <div className="h-4 w-24 bg-neutral-800 rounded animate-pulse" />
-                    </td>
-                    <td className="py-3 px-3">
-                      <div className="h-4 w-12 bg-neutral-800 rounded animate-pulse" />
-                    </td>
-                  </tr>
-                ))}
-              {!albumsLoading &&
-                albumsData &&
-                albumsData.items.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={6}
-                      className="py-6 text-center text-neutral-400"
-                    >
-                      Nenhum álbum encontrado.
-                    </td>
-                  </tr>
-                )}
-              {!albumsLoading &&
-                albumsData &&
-                albumsData.items.map((album, i) => {
-                  const rowIndex = albumsData.offset + i + 1;
-                  return (
-                    <tr
-                      key={album.id}
-                      className={
-                        rowIndex % 2 === 0
-                          ? 'bg-neutral-900/50'
-                          : 'bg-neutral-800/40'
-                      }
-                    >
-                      <td className="py-2 px-3 text-neutral-400 w-12">
-                        {rowIndex}
-                      </td>
-                      <td className="py-2 px-3">
-                        {album.images?.[2]?.url ? (
-                          <img
-                            src={album.images[2].url}
-                            alt={`Capa do álbum ${album.name}`}
-                            className="h-12 w-12 object-cover rounded"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="h-12 w-12 flex items-center justify-center bg-neutral-800 rounded text-[10px] text-neutral-500">
-                            Sem imagem
-                          </div>
-                        )}
-                      </td>
-                      <td className="py-2 px-3 font-medium text-neutral-200">
-                        {album.name}
-                      </td>
-                      <td className="py-2 px-3 text-neutral-300">
-                        {album.album_type}
-                      </td>
-                      <td className="py-2 px-3 text-neutral-300">
-                        {album.release_date}
-                      </td>
-                      <td className="py-2 px-3 text-neutral-300">
-                        {album.total_tracks}
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
-        {albumsFetching && !albumsLoading && (
-          <p className="text-xs text-neutral-500">Atualizando...</p>
-        )}
-      </div>
+      <ArtistAlbumsTable
+        data={albumsData}
+        loading={albumsLoading}
+        fetching={albumsFetching}
+        error={albumsError as Error | null}
+        currentPage={currentAlbumPage}
+        totalPages={totalAlbumPages}
+        canPrev={canPrevAlbums}
+        canNext={canNextAlbums}
+        onPrev={() =>
+          setAlbumsOffset(Math.max(albumsOffset - DEFAULT_LIMIT, 0))
+        }
+        onNext={() => setAlbumsOffset(albumsOffset + DEFAULT_LIMIT)}
+      />
     </div>
   );
 };
