@@ -5,7 +5,9 @@ import type { SpotifyArtist } from '../api/types/spotifyTypes';
 import {
   ArtistCard,
   ArtistCardSkeleton,
-  SpotifySetupInstructions,
+  ErrorState,
+  IsNotAuthSpotify,
+  SpotifyConnecting,
 } from '../components';
 import { GeneratedPagination } from '../components/ui/pagination';
 
@@ -105,30 +107,11 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
   }, [debouncedSearchTerm]);
 
   if (authLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Conectando com Spotify...</p>
-        </div>
-      </div>
-    );
+    return <SpotifyConnecting />;
   }
 
   if (!isAuthenticated) {
-    return (
-      <div className="space-y-6">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Spotify Artist Search
-          </h2>
-          <p className="text-gray-600">
-            Descubra artistas usando a API oficial do Spotify
-          </p>
-        </div>
-        <SpotifySetupInstructions />
-      </div>
-    );
+    return <IsNotAuthSpotify />;
   }
 
   return (
@@ -171,7 +154,13 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             </div>
           )}
           {defaultError && !isLoadingDefault && (
-            <p className="text-red-500">Erro: {defaultError.message}</p>
+            <ErrorState
+              message={defaultError.message}
+              title="Erro ao carregar artistas em destaque"
+              onRetry={() => {
+                setDefaultOffset(prev => prev);
+              }}
+            />
           )}
           {defaultData && !isLoadingDefault && (
             <>
@@ -243,7 +232,13 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             </div>
           )}
           {searchError && (
-            <p className="text-red-500">Erro: {searchError.message}</p>
+            <ErrorState
+              message={searchError.message}
+              title="Erro na busca"
+              onRetry={() => {
+                setSearchOffset(prev => prev);
+              }}
+            />
           )}
           {searchData && searchData.artists.items.length === 0 && (
             <p className="text-yellow-600 mb-4">

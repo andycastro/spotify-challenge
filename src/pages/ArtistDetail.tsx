@@ -4,7 +4,7 @@ import {
   useSpotifyArtistAlbums,
   useSpotifyArtistById,
 } from '../api/queries/useSpotifyQueries';
-import { ArtistDetailSkeleton } from '../components';
+import { ArtistDetailSkeleton, ErrorState } from '../components';
 import { formatFollowers } from '../utils';
 
 export const ArtistDetail: React.FC = () => {
@@ -29,7 +29,9 @@ export const ArtistDetail: React.FC = () => {
   );
 
   if (error) {
-    return <p className="text-red-500">Erro: {error.message}</p>;
+    return (
+      <ErrorState message={error.message} title="Erro ao carregar artista" />
+    );
   }
 
   if (isLoading) {
@@ -205,7 +207,10 @@ export const ArtistDetail: React.FC = () => {
           </div>
         </div>
         {albumsError && (
-          <p className="text-red-500 text-sm">Erro: {albumsError.message}</p>
+          <ErrorState
+            message={albumsError.message}
+            title="Erro ao carregar álbuns"
+          />
         )}
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

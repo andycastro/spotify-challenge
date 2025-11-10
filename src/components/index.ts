@@ -1,6 +1,9 @@
 export { ArtistCard } from './ArtistCard';
-export { ArtistCardSkeleton } from './skeletons/ArtistCardSkeleton';
-export { ArtistDetailSkeleton } from './skeletons/ArtistDetailSkeleton';
+export { ErrorState } from './ErrorState';
 export { Header } from './Header';
 export { ModeToggle } from './ModeToggle';
+export { ArtistCardSkeleton } from './skeletons/ArtistCardSkeleton';
+export { ArtistDetailSkeleton } from './skeletons/ArtistDetailSkeleton';
 export { SpotifySetupInstructions } from './SpotifySetupInstructions';
+export { IsNotAuthSpotify } from './ui-states/IsNotAuthSpotify';
+export { SpotifyConnecting } from './ui-states/SpotifyConnecting';
