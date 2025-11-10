@@ -1,6 +1,7 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { SpotifyService } from '../services/spotifyService';
 import type {
+  SpotifyArtist,
   SpotifySearchParams,
   SpotifySearchResponse,
 } from '../types/spotifyTypes';
@@ -52,6 +53,22 @@ export const useSpotifySearchArtistByName = (
     queryKey: ['spotify-search-artist-by-name', artistName, limit],
     queryFn: () => SpotifyService.searchArtistByName(artistName, limit),
     enabled: enabled && !!artistName,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+};
+
+/**
+ * Hook para buscar artista por ID
+ */
+export const useSpotifyArtistById = (
+  id: string | undefined,
+  enabled: boolean = true
+): UseQueryResult<SpotifyArtist, Error> => {
+  return useQuery({
+    queryKey: ['spotify-artist-by-id', id],
+    queryFn: () => SpotifyService.getArtistById(id as string),
+    enabled: enabled && !!id,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });

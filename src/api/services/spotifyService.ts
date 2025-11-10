@@ -1,5 +1,6 @@
 import axiosInstance from '../configs/axiosInstanceConfig';
 import type {
+  SpotifyArtist,
   SpotifySearchParams,
   SpotifySearchResponse,
 } from '../types/spotifyTypes';
@@ -64,5 +65,15 @@ export class SpotifyService {
       limit,
       offset: 0,
     });
+  }
+
+  /**
+   * Busca dados detalhados de um artista específico pelo ID
+   * @param id - ID do artista no Spotify
+   * @returns Promise com o objeto completo do artista
+   */
+  static async getArtistById(id: string): Promise<SpotifyArtist> {
+    const response = await axiosInstance.get<SpotifyArtist>(`/artists/${id}`);
+    return response.data;
   }
 }
