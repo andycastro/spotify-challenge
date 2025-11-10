@@ -1,6 +1,8 @@
 import axiosInstance from '../configs/axiosInstanceConfig';
 import type {
   SpotifyArtist,
+  SpotifyArtistAlbumsParams,
+  SpotifyArtistAlbumsResponse,
   SpotifySearchParams,
   SpotifySearchResponse,
 } from '../types/spotifyTypes';
@@ -74,6 +76,27 @@ export class SpotifyService {
    */
   static async getArtistById(id: string): Promise<SpotifyArtist> {
     const response = await axiosInstance.get<SpotifyArtist>(`/artists/${id}`);
+    return response.data;
+  }
+
+  /**
+   * Lista álbuns de um artista (paginado)
+   * @param params - Parâmetros (id obrigatório, demais opcionais)
+   */
+  static async getArtistAlbums(
+    params: SpotifyArtistAlbumsParams
+  ): Promise<SpotifyArtistAlbumsResponse> {
+    const { id, limit = 20, offset = 0, include_groups, market } = params;
+    const searchParams = new URLSearchParams({
+      limit: limit.toString(),
+      offset: offset.toString(),
+      ...(include_groups && { include_groups }),
+      ...(market && { market }),
+    });
+
+    const response = await axiosInstance.get<SpotifyArtistAlbumsResponse>(
+      `/artists/${id}/albums?${searchParams.toString()}`
+    );
     return response.data;
   }
 }

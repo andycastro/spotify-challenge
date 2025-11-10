@@ -2,6 +2,8 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { SpotifyService } from '../services/spotifyService';
 import type {
   SpotifyArtist,
+  SpotifyArtistAlbumsParams,
+  SpotifyArtistAlbumsResponse,
   SpotifySearchParams,
   SpotifySearchResponse,
 } from '../types/spotifyTypes';
@@ -69,6 +71,29 @@ export const useSpotifyArtistById = (
     queryKey: ['spotify-artist-by-id', id],
     queryFn: () => SpotifyService.getArtistById(id as string),
     enabled: enabled && !!id,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+};
+
+/**
+ * Hook para listar álbuns de um artista
+ */
+export const useSpotifyArtistAlbums = (
+  params: SpotifyArtistAlbumsParams,
+  enabled: boolean = true
+): UseQueryResult<SpotifyArtistAlbumsResponse, Error> => {
+  return useQuery({
+    queryKey: [
+      'spotify-artist-albums',
+      params.id,
+      params.limit,
+      params.offset,
+      params.include_groups,
+      params.market,
+    ],
+    queryFn: () => SpotifyService.getArtistAlbums(params),
+    enabled: enabled && !!params.id,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });

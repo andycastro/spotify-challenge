@@ -10,6 +10,7 @@ export { AuthContext } from './contexts/AuthContextObject';
 export type { AuthContextType } from './contexts/AuthContextObject';
 export { useAuth } from './hooks/useAuth';
 
+export { GetArtistAlbumsUseCase } from './useCases/getArtistAlbumsUseCase';
 export { GetArtistByIdUseCase } from './useCases/getArtistByIdUseCase';
 export { SearchArtistsUseCase } from './useCases/searchArtistsUseCase';
 
