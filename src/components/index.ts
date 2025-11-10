@@ -1,5 +1,7 @@
 export { ArtistAlbumsTable } from './ArtistAlbumsTable';
 export { ArtistCard } from './ArtistCard';
+export { ArtistImageCard } from './ArtistImageCard';
+export { ArtistInfo } from './ArtistInfo';
 export { Header } from './Header';
 export { ModeToggle } from './ModeToggle';
 export { ArtistCardSkeleton } from './skeletons/ArtistCardSkeleton';
