@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import {
   useSpotifyArtistAlbums,
@@ -14,6 +15,7 @@ import {
 import { HeaderDetails } from './components/HeaderDetails';
 
 export const ArtistDetail: React.FC = () => {
+  const { t } = useTranslation('common');
   const { id } = useParams<{ id: string }>();
   const { data: artist, isLoading, error } = useSpotifyArtistById(id, !!id);
 
@@ -35,9 +37,7 @@ export const ArtistDetail: React.FC = () => {
   );
 
   if (error) {
-    return (
-      <ErrorState message={error.message} title="Erro ao carregar artista" />
-    );
+    return <ErrorState message={error.message} title={t('error.loadArtist')} />;
   }
 
   if (isLoading) {
@@ -45,7 +45,7 @@ export const ArtistDetail: React.FC = () => {
   }
 
   if (!artist) {
-    return <p className="text-gray-500">Artista não encontrado.</p>;
+    return <p className="text-gray-500">{t('error.artistNotFound')}</p>;
   }
 
   const genres = (artist.genres ?? []).slice(0, 10);

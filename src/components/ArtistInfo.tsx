@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatFollowers } from '../utils';
 
 interface ArtistInfoProps {
@@ -21,6 +22,7 @@ export const ArtistInfo: React.FC<ArtistInfoProps> = ({
   isLoading = false,
   className = '',
 }) => {
+  const { t } = useTranslation('common');
   return (
     <div
       className={[
@@ -29,10 +31,7 @@ export const ArtistInfo: React.FC<ArtistInfoProps> = ({
       ].join(' ')}
     >
       {isLoading ? (
-        <div
-          className="space-y-4"
-          aria-label="Carregando informações do artista"
-        >
+        <div className="space-y-4" aria-label={t('artist.loadingInfo')}>
           <div className="h-6 w-48 bg-neutral-800 rounded animate-pulse" />
           <div className="space-y-2">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -55,28 +54,38 @@ export const ArtistInfo: React.FC<ArtistInfoProps> = ({
       ) : (
         <>
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold mb-2">Informações Gerais</h2>
+            <h2 className="text-xl font-semibold mb-2">
+              {t('artist.general.title')}
+            </h2>
             <ul className="divide-y divide-neutral-800 text-sm text-neutral-300">
               <li className="py-2 flex justify-between">
-                <span className="font-medium text-neutral-400">Seguidores</span>
+                <span className="font-medium text-neutral-400">
+                  {t('artist.followers')}
+                </span>
                 <span>{formatFollowers(artist.followers.total)}</span>
               </li>
               <li className="py-2 flex justify-between">
                 <span className="font-medium text-neutral-400">
-                  Popularidade
+                  {t('artist.popularity')}
                 </span>
                 <span>{artist.popularity}%</span>
               </li>
               <li className="py-2 flex justify-between">
-                <span className="font-medium text-neutral-400">ID</span>
+                <span className="font-medium text-neutral-400">
+                  {t('artist.id')}
+                </span>
                 <span className="font-mono text-xs break-all">{artist.id}</span>
               </li>
               <li className="py-2 flex justify-between">
-                <span className="font-medium text-neutral-400">Tipo</span>
+                <span className="font-medium text-neutral-400">
+                  {t('artist.type')}
+                </span>
                 <span>{artist.type}</span>
               </li>
               <li className="py-2 flex justify-between">
-                <span className="font-medium text-neutral-400">URI</span>
+                <span className="font-medium text-neutral-400">
+                  {t('artist.uri')}
+                </span>
                 <span className="font-mono text-xs break-all">
                   {artist.uri}
                 </span>
@@ -85,7 +94,9 @@ export const ArtistInfo: React.FC<ArtistInfoProps> = ({
           </section>
           {genres.length > 0 && (
             <section className="space-y-3">
-              <h2 className="text-xl font-semibold mb-2">Gêneros</h2>
+              <h2 className="text-xl font-semibold mb-2">
+                {t('artist.genres.title')}
+              </h2>
               <ul className="flex flex-wrap gap-2">
                 {genres.map(g => (
                   <li

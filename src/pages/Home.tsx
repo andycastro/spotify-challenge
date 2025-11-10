@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth, useSpotifySearchArtistsDefault } from '../api';
 import { useSpotifySearchArtists } from '../api/queries/useSpotifyQueries';
 import type { SpotifyArtist } from '../api/types/spotifyTypes';
@@ -32,6 +33,7 @@ const useDebounce = (value: string, delay: number): string => {
 };
 
 export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
+  const { t } = useTranslation('common');
   const {
     isAuthenticated,
     isLoading: authLoading,
@@ -117,12 +119,13 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Spotify Artist Search</h2>
+        <h2 className="text-2xl font-bold">{t('home.title')}</h2>
         <div className="flex items-center space-x-4">
           {tokenInfo.hasToken && (
             <div className="text-sm">
               <p className="text-xs text-gray-500 mt-1">
-                Expira em: {Math.floor((tokenInfo.expiresIn || 0) / 60)}min
+                {t('home.token.expires')}:{' '}
+                {Math.floor((tokenInfo.expiresIn || 0) / 60)}min
               </p>
             </div>
           )}
@@ -130,23 +133,22 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             onClick={refreshToken}
             className="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded hover:bg-blue-200 transition-colors"
           >
-            Renovar Token
+            {t('home.token.renew')}
           </button>
         </div>
       </div>
 
       {!trimmedSearchTerm && (
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">Artistas em destaque</h3>
-          <p className="text-gray-600 mb-4">
-            Confira alguns artistas populares ou use o campo de busca no
-            cabeçalho para encontrar seus favoritos
-          </p>
+          <h3 className="text-lg font-semibold mb-2">
+            {t('home.featured.title')}
+          </h3>
+          <p className="text-gray-600 mb-4">{t('home.featured.description')}</p>
           {isLoadingDefault && (
             <div
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
               aria-busy="true"
-              aria-label="Carregando artistas em destaque"
+              aria-label={t('home.loadingFeaturedAria')}
             >
               {Array.from({ length: 6 }).map((_, i) => (
                 <ArtistCardSkeleton key={i} />
@@ -156,7 +158,7 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
           {defaultError && !isLoadingDefault && (
             <ErrorState
               message={defaultError.message}
-              title="Erro ao carregar artistas em destaque"
+              title={t('home.errorFeaturedTitle')}
               onRetry={() => {
                 setDefaultOffset(prev => prev);
               }}
@@ -202,12 +204,10 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
       {trimmedSearchTerm && (
         <div>
           <h3 className="text-lg font-semibold mb-2">
-            Resultados para "{trimmedSearchTerm}"
+            {t('home.search.resultsFor', { term: trimmedSearchTerm })}
           </h3>
           {trimmedSearchTerm.length < 2 && (
-            <p className="text-orange-600 mb-4">
-              Digite pelo menos 2 caracteres para buscar
-            </p>
+            <p className="text-orange-600 mb-4">{t('home.search.minChars')}</p>
           )}
           {isSearchEnabled &&
             !isLoadingSearch &&
@@ -215,7 +215,7 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             !searchError &&
             debouncedSearchTerm === trimmedSearchTerm && (
               <p className="text-orange-600 mb-4">
-                Busca não executada. Verifique autenticação.
+                {t('home.search.notExecuted')}
               </p>
             )}
           {(isLoadingSearch ||
@@ -224,7 +224,7 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
             <div
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
               aria-busy="true"
-              aria-label="Buscando artistas"
+              aria-label={t('home.searchingArtistsAria')}
             >
               {Array.from({ length: 6 }).map((_, i) => (
                 <ArtistCardSkeleton key={i} />
@@ -234,7 +234,7 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
           {searchError && (
             <ErrorState
               message={searchError.message}
-              title="Erro na busca"
+              title={t('home.errorSearchTitle')}
               onRetry={() => {
                 setSearchOffset(prev => prev);
               }}
@@ -242,7 +242,7 @@ export const Home: React.FC<HomeProps> = ({ searchTerm }) => {
           )}
           {searchData && searchData.artists.items.length === 0 && (
             <p className="text-yellow-600 mb-4">
-              Nenhum resultado encontrado para "{trimmedSearchTerm}"
+              {t('home.search.noneFound', { term: trimmedSearchTerm })}
             </p>
           )}
           {searchData && searchData.artists.items.length > 0 && (

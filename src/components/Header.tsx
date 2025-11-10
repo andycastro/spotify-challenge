@@ -1,7 +1,8 @@
 import { SearchIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import fullLogoGreen from '../assets/Full_Logo_Green_RGB.svg';
 import fullLogoWhite from '../assets/Full_Logo_White_RGB.svg';
-import { ModeToggle } from '../components';
+import { LanguageToggle, ModeToggle } from '../components';
 import { Input } from '../components/ui/input';
 import { useTheme } from '../hooks/use-theme';
 
@@ -12,6 +13,7 @@ interface HeaderProps {
 
 export const Header = ({ searchTerm, onSearchChange }: HeaderProps) => {
   const { theme } = useTheme();
+  const { t } = useTranslation('common');
 
   const getSpotifyLogo = () => {
     if (theme === 'system') {
@@ -29,7 +31,7 @@ export const Header = ({ searchTerm, onSearchChange }: HeaderProps) => {
         <a className="flex items-center space-x-2" href="/">
           <img src={getSpotifyLogo()} className="h-8" alt="Spotify" />
           <span className="hidden md:inline-block font-bold">
-            Spotify Challenge
+            {t('app.title')}
           </span>
         </a>
 
@@ -39,7 +41,7 @@ export const Header = ({ searchTerm, onSearchChange }: HeaderProps) => {
               <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500 dark:text-neutral-400 group-focus-within:text-neutral-700 dark:group-focus-within:text-neutral-200 transition-colors" />
               <Input
                 type="search"
-                placeholder="Buscar artistas..."
+                placeholder={t('search.placeholder')}
                 className="pl-9 h-10 w-full rounded-md bg-white dark:bg-[#121212] text-sm border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-200 focus-visible:ring-1 focus-visible:ring-green-500 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 transition-colors"
                 value={searchTerm}
                 onChange={e => onSearchChange(e.target.value)}
@@ -50,6 +52,7 @@ export const Header = ({ searchTerm, onSearchChange }: HeaderProps) => {
 
         <div className="flex items-center gap-2">
           <ModeToggle />
+          <LanguageToggle />
         </div>
       </div>
     </header>

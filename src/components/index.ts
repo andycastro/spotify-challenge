@@ -3,6 +3,7 @@ export { ArtistCard } from './ArtistCard';
 export { ArtistImageCard } from './ArtistImageCard';
 export { ArtistInfo } from './ArtistInfo';
 export { Header } from './Header';
+export { LanguageToggle } from './LanguageToggle';
 export { ModeToggle } from './ModeToggle';
 export { ArtistCardSkeleton } from './skeletons/ArtistCardSkeleton';
 export { ArtistDetailSkeleton } from './skeletons/ArtistDetailSkeleton';

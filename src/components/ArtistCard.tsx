@@ -1,5 +1,6 @@
 import { ExternalLink } from 'lucide-react';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import type { SpotifyArtist } from '../api';
 import { formatFollowers } from '../utils';
@@ -10,6 +11,7 @@ interface ArtistCardProps {
 
 export const ArtistCard: React.FC<ArtistCardProps> = React.memo(
   ({ artist }) => {
+    const { t } = useTranslation('common');
     const image = artist.images?.[0]?.url;
     const popularityPct = useMemo(
       () => Math.min(Math.max(artist.popularity ?? 0, 0), 100),
@@ -33,13 +35,13 @@ export const ArtistCard: React.FC<ArtistCardProps> = React.memo(
             navigate(`/artist-detail/${artist.id}`);
           }
         }}
-        aria-label={`Ver detalhes do artista ${artist.name}`}
+        aria-label={t('artist.card.viewDetails', { name: artist.name })}
       >
         <div className="relative w-full h-[360px] md:h-[456px] bg-neutral-900">
           {image ? (
             <img
               src={image}
-              alt={`Foto do artista ${artist.name}`}
+              alt={t('artist.card.photoAlt', { name: artist.name })}
               className="h-full w-full object-cover object-center transition duration-300 group-hover:scale-[1.02]"
               loading="lazy"
               decoding="async"
@@ -63,7 +65,9 @@ export const ArtistCard: React.FC<ArtistCardProps> = React.memo(
               rel="noopener noreferrer"
               onClick={e => e.stopPropagation()}
               className="absolute right-2 top-2 inline-flex items-center gap-1 rounded bg-black/50 px-2 py-1 text-[11px] font-medium text-neutral-200 backdrop-blur group-hover:bg-black/70 transition hover:bg-black/70"
-              aria-label={`Abrir ${artist.name} no Spotify em nova aba`}
+              aria-label={t('artist.card.openSpotifyAria', {
+                name: artist.name,
+              })}
             >
               <ExternalLink className="h-3 w-3" aria-hidden="true" /> Spotify
             </a>
@@ -78,11 +82,14 @@ export const ArtistCard: React.FC<ArtistCardProps> = React.memo(
               {artist.name}
             </h4>
             <p className="text-[11px] tracking-wide uppercase text-neutral-400">
-              {formatFollowers(artist.followers.total)} seguidores
+              {formatFollowers(artist.followers.total)} {t('artist.followers')}
             </p>
           </div>
           {topGenres.length > 0 && (
-            <ul className="flex flex-wrap gap-1 mt-auto" aria-label="Gêneros">
+            <ul
+              className="flex flex-wrap gap-1 mt-auto"
+              aria-label={t('artist.genres.title')}
+            >
               {topGenres.map(g => (
                 <li
                   key={g}
@@ -96,7 +103,7 @@ export const ArtistCard: React.FC<ArtistCardProps> = React.memo(
           <div className="mt-1" data-testid="popularity-section">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wide">
-                Popularidade
+                {t('artist.popularity')}
               </span>
               <span className="text-[10px] font-semibold text-green-400">
                 {popularityPct}%
@@ -108,7 +115,7 @@ export const ArtistCard: React.FC<ArtistCardProps> = React.memo(
               aria-valuenow={popularityPct}
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-label="Popularidade"
+              aria-label={t('artist.popularity')}
             >
               <div
                 className="h-full bg-gradient-to-r from-[#1ed760] to-[#1db954] transition-all duration-500"
