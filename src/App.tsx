@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { Header } from './components';
-import { Home } from './pages';
+import { ArtistDetail, Home } from './pages';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,13 +12,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header searchTerm={searchTerm} onSearchChange={handleSearchChange} />
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Home searchTerm={searchTerm} />
-      </main>
-    </div>
+    <BrowserRouter>
+      <div className="min-h-screen bg-background">
+        <Header searchTerm={searchTerm} onSearchChange={handleSearchChange} />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Routes>
+            <Route path="/" element={<Home searchTerm={searchTerm} />} />
+            <Route path="/artist-detail/:id" element={<ArtistDetail />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
 

@@ -1,5 +1,6 @@
 import { ExternalLink } from 'lucide-react';
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { SpotifyArtist } from '../api';
 import { formatFollowers } from '../utils';
 
@@ -18,29 +19,34 @@ export const ArtistCard: React.FC<ArtistCardProps> = React.memo(
       () => (artist.genres ?? []).slice(0, 3),
       [artist.genres]
     );
+    const navigate = useNavigate();
 
     return (
-      <div className="group relative flex flex-col rounded-lg border border-[#1ed7601a] bg-[#121212] overflow-hidden shadow-[0_0_0_1px_#1ed76010] hover:shadow-[0_0_0_1px_#1ed76040,0_4px_16px_-2px_rgba(0,0,0,0.6)] transition duration-200">
+      <div
+        className="group relative flex flex-col rounded-lg border border-[#1ed7601a] bg-[#121212] overflow-hidden shadow-[0_0_0_1px_#1ed76010] hover:shadow-[0_0_0_1px_#1ed76040,0_4px_16px_-2px_rgba(0,0,0,0.6)] transition duration-200 cursor-pointer"
+        onClick={() => navigate(`/artist-detail/${artist.id}`)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            navigate(`/artist-detail/${artist.id}`);
+          }
+        }}
+        aria-label={`Ver detalhes do artista ${artist.name}`}
+      >
         <div className="relative w-full h-[360px] md:h-[456px] bg-neutral-900">
           {image ? (
-            <a
-              href={artist.external_urls?.spotify}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Abrir artista no Spotify: ${artist.name}`}
-              className="block h-full w-full"
-            >
-              <img
-                src={image}
-                alt={`Foto do artista ${artist.name}`}
-                className="h-full w-full object-cover object-center transition duration-300 group-hover:scale-[1.02]"
-                loading="lazy"
-                decoding="async"
-                height={456}
-                width={456}
-                sizes="(max-width: 768px) 360px, 456px"
-              />
-            </a>
+            <img
+              src={image}
+              alt={`Foto do artista ${artist.name}`}
+              className="h-full w-full object-cover object-center transition duration-300 group-hover:scale-[1.02]"
+              loading="lazy"
+              decoding="async"
+              height={456}
+              width={456}
+              sizes="(max-width: 768px) 360px, 456px"
+            />
           ) : (
             <div
               className="flex h-full w-full items-center justify-center text-neutral-600 text-6xl font-semibold"
@@ -51,9 +57,16 @@ export const ArtistCard: React.FC<ArtistCardProps> = React.memo(
           )}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition" />
           {artist.external_urls?.spotify && (
-            <span className="absolute right-2 top-2 inline-flex items-center gap-1 rounded bg-black/50 px-2 py-1 text-[11px] font-medium text-neutral-200 backdrop-blur group-hover:bg-black/70 transition">
+            <a
+              href={artist.external_urls.spotify}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={e => e.stopPropagation()}
+              className="absolute right-2 top-2 inline-flex items-center gap-1 rounded bg-black/50 px-2 py-1 text-[11px] font-medium text-neutral-200 backdrop-blur group-hover:bg-black/70 transition hover:bg-black/70"
+              aria-label={`Abrir ${artist.name} no Spotify em nova aba`}
+            >
               <ExternalLink className="h-3 w-3" aria-hidden="true" /> Spotify
-            </span>
+            </a>
           )}
         </div>
         <div className="flex flex-1 flex-col p-3 gap-2">
