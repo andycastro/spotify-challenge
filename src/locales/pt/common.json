@@ -46,5 +46,20 @@
   "albums.type": "Tipo",
   "albums.noImage": "Sem imagem",
   "albums.coverAlt": "Capa do álbum {{name}}",
-  "pagination.pageOf": "Página {{current}} / {{total}}"
+  "pagination.pageOf": "Página {{current}} / {{total}}",
+  "album.save": "Salvar álbum",
+  "album.saveDrawer.title": "Salvar Álbum",
+  "album.saveDrawer.description": "Preencha os dados para salvar este álbum localmente.",
+  "album.fields.name": "Nome",
+  "album.fields.namePlaceholder": "Nome do álbum",
+  "album.fields.artist": "Artista",
+  "album.fields.artistPlaceholder": "Artista(s) do álbum",
+  "album.fields.notes": "Observações",
+  "album.fields.notesPlaceholder": "Digite observações opcionais...",
+  "album.actions.save": "Salvar",
+  "album.actions.cancel": "Cancelar",
+  "album.save.success": "Álbum salvo com sucesso!",
+  "album.save.errorName": "Informe um nome válido.",
+  "album.save.errorGeneric": "Falha ao salvar o álbum.",
+  "album.remove": "Remover álbum"
 }

@@ -5,6 +5,7 @@ export { ArtistInfo } from './ArtistInfo';
 export { Header } from './Header';
 export { LanguageToggle } from './LanguageToggle';
 export { ModeToggle } from './ModeToggle';
+export { SaveAlbumDrawer } from './SaveAlbumDrawer';
 export { ArtistCardSkeleton } from './skeletons/ArtistCardSkeleton';
 export { ArtistDetailSkeleton } from './skeletons/ArtistDetailSkeleton';
 export { SpotifySetupInstructions } from './SpotifySetupInstructions';

@@ -1,6 +1,8 @@
-import React from 'react';
+import { Download } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SpotifyArtistAlbumsResponse } from '../api/types/spotifyTypes';
+import { SaveAlbumDrawer } from './SaveAlbumDrawer';
 import { ErrorState } from './ui-states/ErrorState';
 
 interface ArtistAlbumsTableProps {
@@ -29,6 +31,37 @@ export const ArtistAlbumsTable: React.FC<ArtistAlbumsTableProps> = ({
   onNext,
 }) => {
   const { t } = useTranslation('common');
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+
+  const STORAGE_KEY = 'saved.albums';
+
+  const loadSaved = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return setSavedIds(new Set());
+      const parsed: { id: string }[] = JSON.parse(raw);
+      setSavedIds(new Set(parsed.map(p => p.id)));
+    } catch {
+      setSavedIds(new Set());
+    }
+  };
+
+  useEffect(() => {
+    loadSaved();
+  }, []);
+
+  const handleRemoved = (id: string) => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const list: { id: string }[] = JSON.parse(raw);
+      const next = list.filter(a => a.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      loadSaved();
+    } catch {
+      /* todo - não esquecer de add exceção */
+    }
+  };
   return (
     <div className="bg-[#121212] rounded-lg border border-[#1ed7601a] shadow-[0_0_0_1px_#1ed76010] p-6 space-y-4">
       <div className="flex items-center justify-between">
@@ -81,6 +114,9 @@ export const ArtistAlbumsTable: React.FC<ArtistAlbumsTableProps> = ({
               <th className="py-2 px-3 font-medium text-neutral-300">
                 {t('albums.tracks')}
               </th>
+              <th className="py-2 px-3 font-medium text-neutral-300">
+                {t('album.save')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -110,11 +146,14 @@ export const ArtistAlbumsTable: React.FC<ArtistAlbumsTableProps> = ({
                   <td className="py-3 px-3">
                     <div className="h-4 w-12 bg-neutral-800 rounded animate-pulse" />
                   </td>
+                  <td className="py-3 px-3">
+                    <div className="h-4 w-20 bg-neutral-800 rounded animate-pulse" />
+                  </td>
                 </tr>
               ))}
             {!loading && data && data.items.length === 0 && (
               <tr>
-                <td colSpan={6} className="py-6 text-center text-neutral-400">
+                <td colSpan={7} className="py-6 text-center text-neutral-400">
                   {t('albums.none')}
                 </td>
               </tr>
@@ -160,6 +199,38 @@ export const ArtistAlbumsTable: React.FC<ArtistAlbumsTableProps> = ({
                     </td>
                     <td className="py-2 px-3 text-neutral-300">
                       {album.total_tracks}
+                    </td>
+                    <td className="py-2 px-3 text-neutral-300">
+                      {savedIds.has(album.id) ? (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoved(album.id)}
+                          className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-red-600/10 hover:bg-red-600/20 text-red-400 border border-red-600/30 transition"
+                          aria-label={t('album.remove')}
+                        >
+                          <Download className="h-3.5 w-3.5 rotate-180" />
+                          <span className="hidden sm:inline">
+                            {t('album.remove')}
+                          </span>
+                        </button>
+                      ) : (
+                        <SaveAlbumDrawer
+                          album={album}
+                          onSaved={() => loadSaved()}
+                          trigger={
+                            <button
+                              type="button"
+                              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-green-600/10 hover:bg-green-600/20 text-green-400 border border-green-600/30 transition"
+                              aria-label={t('album.save')}
+                            >
+                              <Download className="h-3.5 w-3.5" />
+                              <span className="hidden sm:inline">
+                                {t('album.save')}
+                              </span>
+                            </button>
+                          }
+                        />
+                      )}
                     </td>
                   </tr>
                 );
