@@ -5,7 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { SpotifyArtistAlbumsResponse } from '../api/types/spotifyTypes';
 import { cn } from '../lib/utils';
 import {
+  SavedAlbumEntry,
   SavedAlbumForm,
+  saveAlbumToStorage,
   savedAlbumSchema,
 } from '../validation/savedAlbumSchema';
 import {
@@ -23,17 +25,8 @@ import { Input } from './ui/input';
 interface SaveAlbumDrawerProps {
   album?: SpotifyArtistAlbumsResponse['items'][number] | null;
   trigger: React.ReactNode;
-  onSaved?: (album: SavedAlbum) => void;
+  onSaved?: (album: SavedAlbumEntry) => void;
 }
-
-interface SavedAlbum {
-  id: string;
-  name: string;
-  artist: string;
-  savedAt: string;
-}
-
-const STORAGE_KEY = 'saved.albums';
 
 export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
   album,
@@ -67,22 +60,14 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
   const handleSave = () => {
     if (!album) return;
     const { name, artist } = form.getValues();
-    const entry: SavedAlbum = {
+    const entry: SavedAlbumEntry = {
       id: album.id,
       name: name.trim(),
       artist: artist.trim(),
       savedAt: new Date().toISOString(),
     };
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const list: SavedAlbum[] = raw ? JSON.parse(raw) : [];
-      const existingIndex = list.findIndex(x => x.id === entry.id);
-      if (existingIndex >= 0) {
-        list[existingIndex] = entry;
-      } else {
-        list.push(entry);
-      }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      saveAlbumToStorage(entry);
       setSuccess(t('album.save.success'));
       setError(null);
       onSaved?.(entry);

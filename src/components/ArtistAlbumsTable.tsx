@@ -2,6 +2,10 @@ import { Download } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SpotifyArtistAlbumsResponse } from '../api/types/spotifyTypes';
+import {
+  loadSavedAlbums,
+  removeAlbumFromStorage,
+} from '../validation/savedAlbumSchema';
 import { SaveAlbumDrawer } from './SaveAlbumDrawer';
 import { ErrorState } from './ui-states/ErrorState';
 
@@ -33,17 +37,9 @@ export const ArtistAlbumsTable: React.FC<ArtistAlbumsTableProps> = ({
   const { t } = useTranslation('common');
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
 
-  const STORAGE_KEY = 'saved.albums';
-
   const loadSaved = () => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return setSavedIds(new Set());
-      const parsed: { id: string }[] = JSON.parse(raw);
-      setSavedIds(new Set(parsed.map(p => p.id)));
-    } catch {
-      setSavedIds(new Set());
-    }
+    const entries = loadSavedAlbums();
+    setSavedIds(new Set(entries.map(e => e.id)));
   };
 
   useEffect(() => {
@@ -51,16 +47,8 @@ export const ArtistAlbumsTable: React.FC<ArtistAlbumsTableProps> = ({
   }, []);
 
   const handleRemoved = (id: string) => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const list: { id: string }[] = JSON.parse(raw);
-      const next = list.filter(a => a.id !== id);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      loadSaved();
-    } catch {
-      /* todo - não esquecer de add exceção */
-    }
+    removeAlbumFromStorage(id);
+    loadSaved();
   };
   return (
     <div
