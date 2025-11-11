@@ -2,49 +2,7 @@
 
 Este projeto tem por objetivo utilizar a API pública do Spotify para listar artistas com funcionalidades de busca, filtros e exibição de detalhes.
 
-## 🎯 Critérios de Aceite
-
-### Funcionalidades Principais
-
-- **Listagem de Artistas**: Página com paginação de 20 itens por página (sem usar tabela)
-- **Filtros de Busca**: Filtro para buscar por nome do artista e por álbum
-- **Página de Detalhes**: Ao clicar em um artista, redirecionar para página de detalhes contendo:
-  - Informações do artista
-  - Lista de top tracks ou álbuns do artista
-  - Tabela paginada com músicas ou álbuns do artista
-- **Internacionalização**: Tradução com idiomas em português e inglês
-- **Gráficos**: Visualização de dados com gráficos
-- **Favoritos**: Formulário para cadastrar músicas favoritas (salvando no localStorage ou cookies)
-
-### 🌟 Diferenciais (Plus)
-
-Será considerado plus se:
-
-- A criatividade for explorada
-- Adicionar novas imagens ou animações entre outros artifícios para dar sua assinatura à aplicação
-- Validações de campos e mensagens de erros com feedback visual
-- Adicionar mais funcionalidades seguindo a API do Spotify
-- Adicionar filtros extras que façam sentido para as funcionalidades existentes
-
-## 🛠️ Requisitos Técnicos Obrigatórios
-
-### Core Technologies
-
-- **React** - Biblioteca principal para UI
-- **TypeScript** - Tipagem estática
-- **Context API** - Gerenciamento de estado utilizando useReducer
-- **React Query** - Cache e sincronização de dados
-- **Axios** - Cliente HTTP para requisições
-- **Tailwind CSS** - Framework CSS para estilização
-- **React Hook Form** - Gerenciamento de formulários
-- **Zod** - Validação de schemas
-- **i18n** - Internacionalização
-
-### 🔧 Diferenciais Técnicos
-
-- Testes unitários e end-to-end
-- ESLint e Prettier para padronização de código
-- Validações usando Zod
+> Documentação original de critérios e requisitos foi removida para focar apenas no estado atual da aplicação e sua arquitetura.
 
 ## 🚀 Como Executar
 
@@ -129,40 +87,56 @@ https://spotify-challenge-ivory.vercel.app/
 
 > Observação: Tokens de autenticação do Spotify expiram e são renovados automaticamente no fluxo implementado. Caso encontre erro de acesso, recarregue a página para forçar a solicitação de um novo token.
 
-## 📁 Estrutura do Projeto (Atual)
+## 📁 Estrutura do Projeto
 
 ```
 src/
-├── components/          # Componentes reutilizáveis
-├── pages/              # Páginas da aplicação
-├── hooks/              # Custom hooks
-├── contexts/           # Context API providers
-├── services/           # Serviços de API
-├── types/              # Definições de tipos TypeScript
-├── utils/              # Funções utilitárias
-├── locales/            # Arquivos de tradução
-└── validation/         # Schemas Zod (formas e storage)
+├── api/                 # Configs axios, query client, services Spotify e tipos
+│   ├── configs/         # Configurações (axiosInstanceConfig, queryClientConfig)
+│   ├── contexts/        # AuthContext (token Spotify)
+│   ├── hooks/           # Hooks relacionados à API (ex: useAuth)
+│   ├── queries/         # Abstrações React Query (custom hooks de busca)
+│   ├── services/        # spotifyAuthService / spotifyService
+│   ├── types/           # Tipos derivados da API do Spotify
+│   └── useCases/        # Casos de uso (ex: searchArtistsUseCase)
+├── assets/              # Imagens, logos, SVGs
+├── components/          # Componentes UI (cards, header, mode toggle, drawer, ui/ primitives)
+│   └── ui/              # Componentes estilizados reutilizáveis (button, input, menu, pagination,...)
+├── hooks/               # Hooks genéricos (ex: use-theme)
+├── lib/                 # Utilidades de baixo nível (theme provider, utils globais)
+├── pages/               # Páginas (Home, futuras rotas)
+├── validation/          # Schemas Zod e helpers de armazenamento local
+├── utils/               # Formatadores, helpers PWA/service worker
+├── App.tsx              # Raiz da aplicação / layout principal
+├── main.tsx             # Bootstrap React + Providers
+└── i18n (via locales)   # Traduções PT/EN (locales/) - se aplicável
 
-Principais diretórios reais (verifique no repositório): `api/`, `components/`, `pages/`, `lib/`, `hooks/`, `utils/`, `validation/`, `locales/`.
+Outros arquivos raiz:
+- vite.config.ts         # Configuração Vite + PWA + test
+- tailwind.config.js     # Config Tailwind
+- tsconfig*.json         # Configurações TypeScript (app / node)
+- eslint.config.js       # Lint config
+- public/                # Manifest, ícones PWA
+```
 
 ## ✨ Funcionalidades Implementadas
 
-| Categoria | Funcionalidade | Detalhes |
-|-----------|----------------|----------|
-| Tema | Tema dark por padrão com toggle para light | Implementado via `ThemeProvider` + classes Tailwind (light-first + `dark:` overrides) |
-| Busca | Busca de artistas com paginação | Paginação controlada, índices exibidos; mínimo de caracteres antes da busca |
-| Detalhes | Página de detalhes do artista | Info geral, lista de álbuns paginada, carregamento com skeletons |
-| Visualização | Gráfico (Area Chart) de faixas por ano de lançamento | Usando **Recharts**, exibido acima da tabela de álbuns |
-| Persistência Local | Salvar álbum (drawer) | Formulário com validação Zod; salva/atualiza entrada no `localStorage` (`saved.albums`) |
-| Validação | Zod schemas | Form (`savedAlbumSchema`) e storage (`savedAlbumEntrySchema`, parsing seguro) |
-| Feedback | Toasts de sucesso | Biblioteca **sonner** para feedback ao salvar ou remover álbuns |
-| Internacionalização | PT / EN | Textos via `i18next`, chaves em `locales/` |
-| Estado / Dados | React Query | Cache de requisições Spotify e estado de loading/fetching |
-| Autenticação | Token Spotify | Serviço `spotifyAuthService` gerencia token e armazenamento local |
-| Skeletons | Carregamento consistente | Cores adaptadas para light/dark com neutral-200 / neutral-800 |
-| PWA | Service Worker + Manifest | Configurado via `vite-plugin-pwa` (offline caching básico para API) |
-| Acessibilidade | Labels associados / aria | Ajustes nos inputs da drawer (`htmlFor`/`id`, `aria-invalid`) |
-| Testes | Unidade (Vitest + Testing Library) | Teste do fluxo de salvar e validação do formulário `SaveAlbumDrawer` |
+| Categoria           | Funcionalidade                                       | Detalhes                                                                                |
+| ------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Tema                | Tema dark por padrão com toggle para light           | Implementado via `ThemeProvider` + classes Tailwind (light-first + `dark:` overrides)   |
+| Busca               | Busca de artistas com paginação                      | Paginação controlada, índices exibidos; mínimo de caracteres antes da busca             |
+| Detalhes            | Página de detalhes do artista                        | Info geral, lista de álbuns paginada, carregamento com skeletons                        |
+| Visualização        | Gráfico (Area Chart) de faixas por ano de lançamento | Usando **Recharts**, exibido acima da tabela de álbuns                                  |
+| Persistência Local  | Salvar álbum (drawer)                                | Formulário com validação Zod; salva/atualiza entrada no `localStorage` (`saved.albums`) |
+| Validação           | Zod schemas                                          | Form (`savedAlbumSchema`) e storage (`savedAlbumEntrySchema`, parsing seguro)           |
+| Feedback            | Toasts de sucesso                                    | Biblioteca **sonner** para feedback ao salvar ou remover álbuns                         |
+| Internacionalização | PT / EN                                              | Textos via `i18next`, chaves em `locales/`                                              |
+| Estado / Dados      | React Query                                          | Cache de requisições Spotify e estado de loading/fetching                               |
+| Autenticação        | Token Spotify                                        | Serviço `spotifyAuthService` gerencia token e armazenamento local                       |
+| Skeletons           | Carregamento consistente                             | Cores adaptadas para light/dark com neutral-200 / neutral-800                           |
+| PWA                 | Service Worker + Manifest                            | Configurado via `vite-plugin-pwa` (offline caching básico para API)                     |
+| Acessibilidade      | Labels associados / aria                             | Ajustes nos inputs da drawer (`htmlFor`/`id`, `aria-invalid`)                           |
+| Testes              | Unidade (Vitest + Testing Library)                   | Teste do fluxo de salvar e validação do formulário `SaveAlbumDrawer`                    |
 
 ## 🔒 Segurança e Boas Práticas
 
@@ -192,6 +166,7 @@ Possíveis ampliações:
 - Testar remoção de álbum e atualização de estado na tabela.
 - Mockar falha de rede (401 / 500) e garantir feedback de erro.
 - Snapshot do gráfico para garantir formato dos dados.
+
 ```
 
 ## 🌐 API do Spotify
@@ -206,3 +181,4 @@ Este projeto utiliza a [Spotify Web API](https://developer.spotify.com/documenta
 ## 📝 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+```
