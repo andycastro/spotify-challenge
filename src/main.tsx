@@ -19,7 +19,7 @@ if (typeof window !== 'undefined') {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="system" storageKey="spotify-challenge-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="spotify-challenge-theme">
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <App />
