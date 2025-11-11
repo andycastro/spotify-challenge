@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { SpotifyArtistAlbumsResponse } from '../api/types/spotifyTypes';
 import { cn } from '../lib/utils';
@@ -16,11 +17,11 @@ import { Input } from './ui/input';
 
 interface SaveAlbumDrawerProps {
   album?: SpotifyArtistAlbumsResponse['items'][number] | null;
-  trigger?: React.ReactNode;
-  onSaved?: (data: SavedAlbum) => void;
+  trigger: React.ReactNode;
+  onSaved?: (album: SavedAlbum) => void;
 }
 
-export interface SavedAlbum {
+interface SavedAlbum {
   id: string;
   name: string;
   artist: string;
@@ -35,31 +36,40 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
   trigger,
   onSaved,
 }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [artist, setArtist] = useState('');
-  const [notes, setNotes] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const form = useForm<Pick<SavedAlbum, 'name' | 'artist' | 'notes'>>({
+    defaultValues: {
+      name: '',
+      artist: album?.artists?.[0]?.name || '',
+      notes: '',
+    },
+  });
 
   useEffect(() => {
     if (album && open) {
-      setName(album.name || '');
-      setArtist(album.artists?.map(a => a.name).join(', ') || '');
+      form.reset({
+        name: album.name || '',
+        artist: album.artists?.[0]?.name || '',
+        notes: '',
+      });
+      setSuccess(null);
+      setError(null);
     }
-  }, [album, open]);
-
-  const reset = () => {
-    setError(null);
-    setSuccess(null);
-    setNotes('');
-  };
+  }, [album, open, form]);
 
   const handleSave = () => {
     if (!album) return;
+    const { name, artist, notes } = form.getValues();
     if (!name.trim()) {
       setError(t('album.save.errorName'));
+      return;
+    }
+    if (!artist.trim()) {
+      setError(t('album.save.errorArtist'));
       return;
     }
     const entry: SavedAlbum = {
@@ -83,8 +93,8 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
       setError(null);
       onSaved?.(entry);
       setTimeout(() => {
+        form.reset({ name: '', artist: '', notes: '' });
         setOpen(false);
-        reset();
       }, 900);
     } catch (e) {
       console.error('Failed saving album', e);
@@ -96,74 +106,78 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
+        <div className="mx-auto w-full max-w-md">
           <DrawerHeader>
-            <DrawerTitle>{t('album.saveDrawer.title')}</DrawerTitle>
-            <DrawerDescription>
+            <DrawerTitle className="text-lg sm:text-xl font-semibold tracking-tight flex items-center gap-2">
+              {t('album.saveDrawer.title')}
+            </DrawerTitle>
+            <DrawerDescription className="text-neutral-400 text-sm">
               {t('album.saveDrawer.description')}
             </DrawerDescription>
+            {/* helper text removed per request (localStorage/update sentences) */}
           </DrawerHeader>
+          {success && (
+            <p className="mt-2 text-xs text-green-500" role="status">
+              {success}
+            </p>
+          )}
+          {error && (
+            <p className="mt-2 text-xs text-red-500" role="alert">
+              {error}
+            </p>
+          )}
           <form
-            onSubmit={e => {
-              e.preventDefault();
-              handleSave();
-            }}
-            className="flex flex-col gap-4 p-4 pt-0"
+            onSubmit={form.handleSubmit(() => handleSave())}
+            className="flex flex-col gap-6 p-4 pt-4"
           >
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-neutral-300">
-                {t('album.fields.name')}
-              </label>
-              <Input
-                value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder={t('album.fields.namePlaceholder')}
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-neutral-300">
-                {t('album.fields.artist')}
-              </label>
-              <Input
-                value={artist}
-                onChange={e => setArtist(e.target.value)}
-                placeholder={t('album.fields.artistPlaceholder')}
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-neutral-300">
-                {t('album.fields.notes')}
-              </label>
-              <textarea
-                value={notes}
-                onChange={e => setNotes(e.target.value)}
-                placeholder={t('album.fields.notesPlaceholder')}
-                className="min-h-24 resize-y rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600"
-              />
-            </div>
-            {error && (
-              <p className="text-xs text-red-500" role="alert">
-                {error}
-              </p>
-            )}
-            {success && (
-              <p className="text-xs text-green-500" role="status">
-                {success}
-              </p>
-            )}
+            <fieldset className="space-y-4">
+              <legend className="text-xs uppercase tracking-wide text-neutral-400 font-medium">
+                {t('album.section.details')}
+              </legend>
+              <div className="space-y-1">
+                <label className="text-[11px] font-medium text-neutral-300">
+                  {t('album.fields.name')}
+                </label>
+                <Input
+                  {...form.register('name', { required: true })}
+                  placeholder={t('album.fields.namePlaceholder')}
+                  className="h-9 text-sm border border-neutral-700 bg-neutral-900/30"
+                />
+                {form.formState.errors.name && (
+                  <p className="text-[10px] text-red-500">
+                    {t('album.save.errorName')}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-1">
+                <label className="text-[11px] font-medium text-neutral-300">
+                  {t('album.fields.artist')}
+                </label>
+                <Input
+                  {...form.register('artist', { required: true })}
+                  placeholder={t('album.fields.artistPlaceholder')}
+                  className="h-9 text-sm border border-neutral-700 bg-neutral-900/30"
+                />
+                {form.formState.errors.artist && (
+                  <p className="text-[10px] text-red-500">
+                    {t('album.save.errorArtist')}
+                  </p>
+                )}
+              </div>
+            </fieldset>
             <DrawerFooter>
               <button
                 type="submit"
                 className={cn(
-                  'px-3 py-1.5 text-xs rounded bg-green-600 hover:bg-green-700 text-white transition'
+                  'px-4 py-2 text-xs rounded bg-green-600 hover:bg-green-700 text-white transition shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500'
                 )}
               >
-                {t('album.actions.save')}
+                {t('album.actions.saveAndClose')}
               </button>
               <DrawerClose asChild>
                 <button
                   type="button"
-                  className="px-3 py-1.5 text-xs rounded bg-neutral-700 hover:bg-neutral-600 text-neutral-100 transition"
+                  className="px-4 py-2 text-xs rounded bg-neutral-700 hover:bg-neutral-600 text-neutral-100 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500"
                 >
                   {t('album.actions.cancel')}
                 </button>

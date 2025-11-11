@@ -54,12 +54,14 @@
   "album.fields.namePlaceholder": "Album name",
   "album.fields.artist": "Artist",
   "album.fields.artistPlaceholder": "Album artist(s)",
-  "album.fields.notes": "Notes",
-  "album.fields.notesPlaceholder": "Enter optional notes...",
   "album.actions.save": "Save",
   "album.actions.cancel": "Cancel",
   "album.save.success": "Album saved successfully!",
   "album.save.errorName": "Provide a valid name.",
+  "album.save.errorArtist": "Provide the artist.",
   "album.save.errorGeneric": "Failed to save album.",
-  "album.remove": "Remove album"
+  "album.remove": "Remove album",
+  "album.saveDrawer.help": "",
+  "album.section.details": "Album Details",
+  "album.actions.saveAndClose": "Save & close"
 }
