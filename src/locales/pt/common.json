@@ -17,6 +17,7 @@
   "artist.type": "Tipo",
   "artist.uri": "URI",
   "albums.title": "Álbuns",
+  "albums.chart.title": "Faixas por lançamento",
   "albums.release": "Lançamento",
   "albums.tracks": "Faixas",
   "albums.prev": "Anterior",

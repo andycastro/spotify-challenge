@@ -12,6 +12,7 @@ import {
   ArtistInfo,
   ErrorState,
 } from '../components';
+import { AlbumsAreaChart } from '../components/AlbumsAreaChart';
 import { HeaderDetails } from './components/HeaderDetails';
 
 export const ArtistDetail: React.FC = () => {
@@ -74,6 +75,8 @@ export const ArtistDetail: React.FC = () => {
         />
         <ArtistInfo artist={artist} genres={genres} isLoading={isLoading} />
       </div>
+
+      <AlbumsAreaChart data={albumsData} loading={albumsLoading} />
 
       <ArtistAlbumsTable
         data={albumsData}
