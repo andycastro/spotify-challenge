@@ -25,7 +25,6 @@ interface SavedAlbum {
   id: string;
   name: string;
   artist: string;
-  notes: string;
   savedAt: string;
 }
 
@@ -41,11 +40,10 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const form = useForm<Pick<SavedAlbum, 'name' | 'artist' | 'notes'>>({
+  const form = useForm<Pick<SavedAlbum, 'name' | 'artist'>>({
     defaultValues: {
       name: '',
       artist: album?.artists?.[0]?.name || '',
-      notes: '',
     },
   });
 
@@ -54,7 +52,6 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
       form.reset({
         name: album.name || '',
         artist: album.artists?.[0]?.name || '',
-        notes: '',
       });
       setSuccess(null);
       setError(null);
@@ -63,7 +60,7 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
 
   const handleSave = () => {
     if (!album) return;
-    const { name, artist, notes } = form.getValues();
+    const { name, artist } = form.getValues();
     if (!name.trim()) {
       setError(t('album.save.errorName'));
       return;
@@ -76,7 +73,6 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
       id: album.id,
       name: name.trim(),
       artist: artist.trim(),
-      notes: notes.trim(),
       savedAt: new Date().toISOString(),
     };
     try {
@@ -93,7 +89,7 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
       setError(null);
       onSaved?.(entry);
       setTimeout(() => {
-        form.reset({ name: '', artist: '', notes: '' });
+        form.reset({ name: '', artist: '' });
         setOpen(false);
       }, 900);
     } catch (e) {

@@ -63,7 +63,7 @@ export const ArtistDetail: React.FC = () => {
     albumsData.offset + albumsData.limit < albumsData.total;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-neutral-800 dark:text-neutral-100">
       <HeaderDetails artist={artist} />
 
       <div className="grid md:grid-cols-3 gap-8">

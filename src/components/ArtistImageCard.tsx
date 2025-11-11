@@ -4,7 +4,6 @@ interface ArtistImageCardProps {
   name: string;
   imageUrl?: string;
   isLoading?: boolean;
-  className?: string;
   imgAltPrefix?: string;
   heightClass?: string;
 }
@@ -13,20 +12,14 @@ export const ArtistImageCard: React.FC<ArtistImageCardProps> = ({
   name,
   imageUrl,
   isLoading = false,
-  className = '',
   imgAltPrefix = 'Imagem de',
   heightClass = 'h-64',
 }) => {
   return (
-    <div
-      className={[
-        'md:col-span-1 bg-[#121212] rounded-lg border border-[#1ed7601a] shadow-[0_0_0_1px_#1ed76010] p-4 flex items-center justify-center',
-        className,
-      ].join(' ')}
-    >
+    <div className="md:col-span-1 rounded-lg border p-4 flex items-center justify-center bg-white border-green-500/10 shadow-[0_0_0_1px_rgba(16,16,16,0.05)] dark:bg-[#121212] dark:border-[#1ed7601a] dark:shadow-[0_0_0_1px_#1ed76010]">
       {isLoading ? (
         <div
-          className={`${heightClass} w-full rounded bg-neutral-800 animate-pulse`}
+          className={`${heightClass} w-full rounded bg-neutral-200 animate-pulse dark:bg-neutral-800`}
           aria-label="Carregando imagem do artista"
         />
       ) : imageUrl ? (
@@ -37,10 +30,7 @@ export const ArtistImageCard: React.FC<ArtistImageCardProps> = ({
         />
       ) : (
         <div
-          className={[
-            heightClass,
-            'flex items-center justify-center rounded bg-neutral-900 text-6xl font-semibold text-neutral-600 w-full select-none',
-          ].join(' ')}
+          className={`${heightClass} flex items-center justify-center rounded bg-neutral-100 text-6xl font-semibold text-neutral-400 w-full select-none dark:bg-neutral-900 dark:text-neutral-600`}
           aria-label={`Sem imagem para ${name}`}
         >
           {name.charAt(0).toUpperCase()}
