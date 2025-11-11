@@ -1,6 +1,7 @@
 import { Download } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import type { SpotifyArtistAlbumsResponse } from '../api/types/spotifyTypes';
 import {
   loadSavedAlbums,
@@ -49,6 +50,7 @@ export const ArtistAlbumsTable: React.FC<ArtistAlbumsTableProps> = ({
   const handleRemoved = (id: string) => {
     removeAlbumFromStorage(id);
     loadSaved();
+    toast.success(t('album.remove.toast'));
   };
   return (
     <div

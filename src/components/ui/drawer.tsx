@@ -32,7 +32,9 @@ const DrawerContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed top-0 right-0 z-50 flex h-full w-80 flex-col bg-[#121212] p-4 shadow-lg border-l border-neutral-700',
+        'fixed top-0 right-0 z-50 flex h-full w-80 flex-col p-4 border-l',
+        'bg-white border-green-500/10 shadow-[0_0_0_1px_rgba(16,16,16,0.06)]',
+        'dark:bg-[#121212] dark:border-[#1ed7601a] dark:shadow-[0_0_0_1px_#1ed76010]',
         'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right',
         className
       )}
@@ -40,7 +42,7 @@ const DrawerContent = React.forwardRef<
     >
       {children}
       <DrawerClose
-        className="absolute right-4 top-4 rounded-sm opacity-70 transition hover:opacity-100 focus:outline-none"
+        className="absolute right-4 top-4 rounded-sm opacity-70 transition hover:opacity-100 focus:outline-none text-neutral-600 dark:text-neutral-300"
         aria-label="Close"
       >
         <X className="h-4 w-4" />

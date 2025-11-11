@@ -58,10 +58,12 @@
   "album.actions.save": "Salvar",
   "album.actions.cancel": "Cancelar",
   "album.save.success": "Álbum salvo com sucesso!",
+  "album.save.toast": "Álbum salvo!",
   "album.save.errorName": "Informe um nome válido.",
   "album.save.errorArtist": "Informe o artista.",
   "album.save.errorGeneric": "Falha ao salvar o álbum.",
   "album.remove": "Remover álbum",
+  "album.remove.toast": "Álbum removido!",
   "album.saveDrawer.help": "",
   "album.section.details": "Detalhes do Álbum",
   "album.actions.saveAndClose": "Salvar e fechar"

@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { SpotifyArtistAlbumsResponse } from '../api/types/spotifyTypes';
 import { cn } from '../lib/utils';
 import {
@@ -69,6 +70,7 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
     try {
       saveAlbumToStorage(entry);
       setSuccess(t('album.save.success'));
+      toast.success(t('album.save.toast'));
       setError(null);
       onSaved?.(entry);
       setTimeout(() => {
@@ -93,7 +95,6 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
             <DrawerDescription className="text-neutral-400 text-sm">
               {t('album.saveDrawer.description')}
             </DrawerDescription>
-            {/* helper text removed per request (localStorage/update sentences) */}
           </DrawerHeader>
           {success && (
             <p className="mt-2 text-xs text-green-500" role="status">
@@ -114,13 +115,13 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
                 {t('album.section.details')}
               </legend>
               <div className="space-y-1">
-                <label className="text-[11px] font-medium text-neutral-300">
+                <label className="text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
                   {t('album.fields.name')}
                 </label>
                 <Input
                   {...form.register('name')}
                   placeholder={t('album.fields.namePlaceholder')}
-                  className="h-9 text-sm border border-neutral-700 bg-neutral-900/30"
+                  className="h-9 text-sm border border-neutral-300 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-100"
                   aria-invalid={!!form.formState.errors.name}
                 />
                 {form.formState.errors.name && (
@@ -133,13 +134,13 @@ export const SaveAlbumDrawer: React.FC<SaveAlbumDrawerProps> = ({
                 )}
               </div>
               <div className="space-y-1">
-                <label className="text-[11px] font-medium text-neutral-300">
+                <label className="text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
                   {t('album.fields.artist')}
                 </label>
                 <Input
                   {...form.register('artist')}
                   placeholder={t('album.fields.artistPlaceholder')}
-                  className="h-9 text-sm border border-neutral-700 bg-neutral-900/30"
+                  className="h-9 text-sm border border-neutral-300 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-100"
                   aria-invalid={!!form.formState.errors.artist}
                 />
                 {form.formState.errors.artist && (
